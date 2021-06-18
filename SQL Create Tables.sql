@@ -1,0 +1,54 @@
+-- Database: Dados_IBGE
+
+-- DROP DATABASE "Dados_IBGE";
+
+CREATE DATABASE "Dados_IBGE"
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Portuguese_Brazil.1252'
+    LC_CTYPE = 'Portuguese_Brazil.1252'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+
+COMMENT ON DATABASE "Dados_IBGE"
+    IS 'PI Módulo 1 - 2021';
+	
+CREATE TABLE Estados (
+UF VARCHAR(3) PRIMARY KEY,
+NOME_UF VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Municipios(
+Cod_Municipio VARCHAR(50) PRIMARY KEY,
+UF VARCHAR(3) NOT NULL,
+Nome_Municipio VARCHAR(200) NOT NULL,
+CONSTRAINT fk_uf FOREIGN KEY (UF) REFERENCES Estados(UF)
+);
+
+CREATE TABLE Indicadores(
+Cod_Municipio VARCHAR(50),
+Ano INTEGER,
+TXMOINF NUMERIC(10, 2),
+TXOBITMATERN NUMERIC(10, 2),
+TXNASC7C NUMERIC(10, 2),
+TXHIV NUMERIC(10, 2),
+TXMOSUI NUMERIC(10, 2),
+TXMOHOMI NUMERIC(10, 2),
+CONSTRAINT cidade_ano PRIMARY KEY(Cod_Municipio, Ano),
+CONSTRAINT cidade_fk FOREIGN KEY (Cod_Municipio) REFERENCES Municipios(Cod_Municipio)
+);
+
+CREATE TABLE Indicadores_Estaticos(
+Codigo_Municipio VARCHAR(50) PRIMARY KEY,
+PIB NUMERIC(30,0),
+POPULACAO NUMERIC(30,0),
+CONSTRAINT fk_municipio FOREIGN KEY (Codigo_Municipio) REFERENCES Municipios(Codigo_Municipio)
+);
+
+CREATE TABLE Legenda_Indicadores(
+Cod_Sigla VARCHAR(50) PRIMARY KEY,
+Sigla VARCHAR(50),
+Nome_Indicador VARCHAR(100),
+Definicao VARCHAR(300)
+)
